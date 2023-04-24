@@ -205,12 +205,10 @@ else:
             break
     else:
         # BLAS not found
-        raise ImportError(
-            ' \
+        raise ImportError(' \
 \nBLAS not found from numpy.distutils.system_info.get_info. \
 \nPlease specify BLAS with: python setup.py install --blas=openblas" \
-\nfor more information, please visit https://github.com/NVIDIA/MinkowskiEngine/wiki/Installation'
-        )
+\nfor more information, please visit https://github.com/NVIDIA/MinkowskiEngine/wiki/Installation')
 
 print(f"\nUsing BLAS={BLAS}")
 
@@ -310,7 +308,10 @@ ext_modules = [
     Extension(
         name="MinkowskiEngineBackend._C",
         sources=[*[str(SRC_PATH / src_file) for src_file in SRC_FILES], *BIND_FILES],
-        extra_compile_args={"cxx": CC_FLAGS, "nvcc": NVCC_FLAGS},
+        extra_compile_args={
+            "cxx": CC_FLAGS,
+            "nvcc": NVCC_FLAGS
+        },
         libraries=libraries,
     ),
 ]

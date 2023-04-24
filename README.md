@@ -1,15 +1,14 @@
 ### [Note]
-This repo contains a new custom CUDA kernel for depth-wise convolutions, which the original MinkowskiEngine does not support.
 
-[pypi-image]: https://badge.fury.io/py/MinkowskiEngine.svg
-[pypi-url]: https://pypi.org/project/MinkowskiEngine/
-[pypi-download]: https://img.shields.io/pypi/dm/MinkowskiEngine
-[slack-badge]: https://img.shields.io/badge/slack-join%20chats-brightgreen
-[slack-url]: https://join.slack.com/t/minkowskiengine/shared_invite/zt-piq2x02a-31dOPocLt6bRqOGY3U_9Sw
+This repo fixes the compatibility with new versions of pytorch and timm
+
+### [Note]
+
+This repo contains a new custom CUDA kernel for depth-wise convolutions, which the original MinkowskiEngine does not support.
 
 # Minkowski Engine
 
-[![PyPI Version][pypi-image]][pypi-url] [![pypi monthly download][pypi-download]][pypi-url] [![slack chat][slack-badge]][slack-url]
+[PyPI Version][pypi-url] [pypi monthly download][pypi-url] [slack chat][slack-url]
 
 The Minkowski Engine is an auto-differentiation library for sparse tensors. It supports all standard neural network layers such as convolution, pooling, unpooling, and broadcasting operations for sparse tensors. For more information, please visit [the documentation page](http://nvidia.github.io/MinkowskiEngine/overview.html).
 
@@ -24,28 +23,27 @@ The Minkowski Engine is an auto-differentiation library for sparse tensors. It s
 
 The Minkowski Engine supports various functions that can be built on a sparse tensor. We list a few popular network architectures and applications here. To run the examples, please install the package and run the command in the package root directory.
 
-| Examples              | Networks and Commands                                                                                                                                                           |
-|:---------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| Semantic Segmentation | <img src="https://nvidia.github.io/MinkowskiEngine/_images/segmentation_3d_net.png"> <br /> <img src="https://nvidia.github.io/MinkowskiEngine/_images/segmentation.png" width="256"> <br /> `python -m examples.indoor` |
-| Classification        | ![](https://nvidia.github.io/MinkowskiEngine/_images/classification_3d_net.png) <br /> `python -m examples.classification_modelnet40`                                                          |
-| Reconstruction        | <img src="https://nvidia.github.io/MinkowskiEngine/_images/generative_3d_net.png"> <br /> <img src="https://nvidia.github.io/MinkowskiEngine/_images/generative_3d_results.gif" width="256"> <br /> `python -m examples.reconstruction` |
-| Completion            | <img src="https://nvidia.github.io/MinkowskiEngine/_images/completion_3d_net.png"> <br /> `python -m examples.completion`                                                       |
-| Detection             | <img src="https://nvidia.github.io/MinkowskiEngine/_images/detection_3d_net.png">                                                                                               |
-
+|       Examples       |                                                                                                               Networks and Commands                                                                                                               |
+| :-------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| Semantic Segmentation |        `<img src="https://nvidia.github.io/MinkowskiEngine/_images/segmentation_3d_net.png">` <br /> `<img src="https://nvidia.github.io/MinkowskiEngine/_images/segmentation.png" width="256">` <br /> `python -m examples.indoor`        |
+|    Classification    |                                                       ![](https://nvidia.github.io/MinkowskiEngine/_images/classification_3d_net.png) <br /> `python -m examples.classification_modelnet40`                                                       |
+|    Reconstruction    | `<img src="https://nvidia.github.io/MinkowskiEngine/_images/generative_3d_net.png">` <br /> `<img src="https://nvidia.github.io/MinkowskiEngine/_images/generative_3d_results.gif" width="256">` <br /> `python -m examples.reconstruction` |
+|      Completion      |                                                          `<img src="https://nvidia.github.io/MinkowskiEngine/_images/completion_3d_net.png">` <br /> `python -m examples.completion`                                                          |
+|       Detection       |                                                                               `<img src="https://nvidia.github.io/MinkowskiEngine/_images/detection_3d_net.png">`                                                                               |
 
 ## Sparse Tensor Networks: Neural Networks for Spatially Sparse Tensors
 
 Compressing a neural network to speedup inference and minimize memory footprint has been studied widely. One of the popular techniques for model compression is pruning the weights in convnets, is also known as [*sparse convolutional networks*](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Liu_Sparse_Convolutional_Neural_2015_CVPR_paper.pdf). Such parameter-space sparsity used for model compression compresses networks that operate on dense tensors and all intermediate activations of these networks are also dense tensors.
 
-However, in this work, we focus on [*spatially* sparse data](https://arxiv.org/abs/1409.6070), in particular, spatially sparse high-dimensional inputs and 3D data and convolution on the surface of 3D objects, first proposed in [Siggraph'17](https://wang-ps.github.io/O-CNN.html). We can also represent these data as sparse tensors, and these sparse tensors are commonplace in high-dimensional problems such as 3D perception, registration, and statistical data. We define neural networks specialized for these inputs as *sparse tensor networks*  and these sparse tensor networks process and generate sparse tensors as outputs. To construct a sparse tensor network, we build all standard neural network layers such as MLPs, non-linearities, convolution, normalizations, pooling operations as the same way we define them on a dense tensor and implemented in the Minkowski Engine.
+However, in this work, we focus on [*spatially* sparse data](https://arxiv.org/abs/1409.6070), in particular, spatially sparse high-dimensional inputs and 3D data and convolution on the surface of 3D objects, first proposed in [Siggraph&#39;17](https://wang-ps.github.io/O-CNN.html). We can also represent these data as sparse tensors, and these sparse tensors are commonplace in high-dimensional problems such as 3D perception, registration, and statistical data. We define neural networks specialized for these inputs as *sparse tensor networks*  and these sparse tensor networks process and generate sparse tensors as outputs. To construct a sparse tensor network, we build all standard neural network layers such as MLPs, non-linearities, convolution, normalizations, pooling operations as the same way we define them on a dense tensor and implemented in the Minkowski Engine.
 
 We visualized a sparse tensor network operation on a sparse tensor, convolution, below. The convolution layer on a sparse tensor works similarly to that on a dense tensor. However, on a sparse tensor, we compute convolution outputs on a few specified points which we can control in the [generalized convolution](https://nvidia.github.io/MinkowskiEngine/sparse_tensor_network.html). For more information, please visit [the documentation page on sparse tensor networks](https://nvidia.github.io/MinkowskiEngine/sparse_tensor_network.html) and [the terminology page](https://nvidia.github.io/MinkowskiEngine/terminology.html).
 
-| Dense Tensor                                                                | Sparse Tensor                                                                |
-|:---------------------------------------------------------------------------:|:----------------------------------------------------------------------------:|
-| <img src="https://nvidia.github.io/MinkowskiEngine/_images/conv_dense.gif"> | <img src="https://nvidia.github.io/MinkowskiEngine/_images/conv_sparse.gif"> |
+|                                  Dense Tensor                                  |                                  Sparse Tensor                                  |
+| :-----------------------------------------------------------------------------: | :------------------------------------------------------------------------------: |
+| `<img src="https://nvidia.github.io/MinkowskiEngine/_images/conv_dense.gif">` | `<img src="https://nvidia.github.io/MinkowskiEngine/_images/conv_sparse.gif">` |
 
---------------------------------------------------------------------------------
+---
 
 ## Features
 
@@ -58,7 +56,6 @@ We visualized a sparse tensor network operation on a sparse tensor, convolution,
 - Multi-threaded compilation
 - Highly-optimized GPU kernels
 
-
 ## Requirements
 
 - Ubuntu >= 14.04
@@ -67,7 +64,6 @@ We visualized a sparse tensor network operation on a sparse tensor, convolution,
 - python >= 3.6
 - ninja (for installation)
 - GCC >= 7.4.0
-
 
 ## Installation
 
@@ -78,7 +74,6 @@ If you cannot find a relevant problem, please report the issue on [the github is
 - [Conda](https://github.com/NVIDIA/MinkowskiEngine#anaconda) installation
 - [Python](https://github.com/NVIDIA/MinkowskiEngine#system-python) installation
 - [Docker](https://github.com/NVIDIA/MinkowskiEngine#docker) installation
-
 
 ### Pip
 
@@ -112,6 +107,7 @@ pip install -U git+https://github.com/NVIDIA/MinkowskiEngine -v --no-deps \
 ### Anaconda
 
 MinkowskiEngine supports both CUDA 10.2 and cuda 11.1, which work for most of latest pytorch versions.
+
 #### CUDA 10.2
 
 We recommend `python>=3.6` for installation.
@@ -204,7 +200,6 @@ docker run MinkowskiEngine python3 -c "import MinkowskiEngine; print(MinkowskiEn
 
 The Minkowski Engine supports CPU only build on other platforms that do not have NVidia GPUs. Please refer to [quick start](https://nvidia.github.io/MinkowskiEngine/quick_start.html) for more details.
 
-
 ## Quick Start
 
 To use the Minkowski Engine, you first would need to import the engine.
@@ -212,7 +207,6 @@ Then, you would need to define the network. If the data you have is not
 quantized, you would need to voxelize or quantize the (spatial) data into a
 sparse tensor.  Fortunately, the Minkowski Engine provides the quantization
 function (`MinkowskiEngine.utils.sparse_quantize`).
-
 
 ### Creating a Network
 
@@ -282,7 +276,6 @@ For issues not listed on the API and feature requests, feel free to submit
 an issue on the [github issue
 page](https://github.com/NVIDIA/MinkowskiEngine/issues).
 
-
 ## Known Issues
 
 ### Specifying CUDA architecture list
@@ -333,7 +326,7 @@ export OMP_NUM_THREADS=<number of threads to use>; python <your_program.py>
 
 If you use the Minkowski Engine, please cite:
 
-- [4D Spatio-Temporal ConvNets: Minkowski Convolutional Neural Networks, CVPR'19](https://arxiv.org/abs/1904.08755), [[pdf]](https://arxiv.org/pdf/1904.08755.pdf)
+- [4D Spatio-Temporal ConvNets: Minkowski Convolutional Neural Networks, CVPR&#39;19](https://arxiv.org/abs/1904.08755), [[pdf]](https://arxiv.org/pdf/1904.08755.pdf)
 
 ```
 @inproceedings{choy20194d,
@@ -379,7 +372,6 @@ For generative transposed convolution, please cite:
 }
 ```
 
-
 ## Unittest
 
 For unittests and gradcheck, use torch >= 1.7
@@ -389,11 +381,16 @@ For unittests and gradcheck, use torch >= 1.7
 Please feel free to update [the wiki page](https://github.com/NVIDIA/MinkowskiEngine/wiki/Usage) to add your projects!
 
 - [Projects using MinkowskiEngine](https://github.com/NVIDIA/MinkowskiEngine/wiki/Usage)
+- Segmentation: [3D and 4D Spatio-Temporal Semantic Segmentation, CVPR&#39;19](https://github.com/chrischoy/SpatioTemporalSegmentation)
+- Representation Learning: [Fully Convolutional Geometric Features, ICCV&#39;19](https://github.com/chrischoy/FCGF)
+- 3D Registration: [Learning multiview 3D point cloud registration, CVPR&#39;20](https://arxiv.org/abs/2001.05119)
+- 3D Registration: [Deep Global Registration, CVPR&#39;20](https://arxiv.org/abs/2004.11540)
+- Pattern Recognition: [High-Dimensional Convolutional Networks for Geometric Pattern Recognition, CVPR&#39;20](https://arxiv.org/abs/2005.08144)
+- Detection: [Generative Sparse Detection Networks for 3D Single-shot Object Detection, ECCV&#39;20](https://arxiv.org/abs/2006.12356)
+- Image matching: [Sparse Neighbourhood Consensus Networks, ECCV&#39;20](https://www.di.ens.fr/willow/research/sparse-ncnet/)
 
-- Segmentation: [3D and 4D Spatio-Temporal Semantic Segmentation, CVPR'19](https://github.com/chrischoy/SpatioTemporalSegmentation)
-- Representation Learning: [Fully Convolutional Geometric Features, ICCV'19](https://github.com/chrischoy/FCGF)
-- 3D Registration: [Learning multiview 3D point cloud registration, CVPR'20](https://arxiv.org/abs/2001.05119)
-- 3D Registration: [Deep Global Registration, CVPR'20](https://arxiv.org/abs/2004.11540)
-- Pattern Recognition: [High-Dimensional Convolutional Networks for Geometric Pattern Recognition, CVPR'20](https://arxiv.org/abs/2005.08144)
-- Detection: [Generative Sparse Detection Networks for 3D Single-shot Object Detection, ECCV'20](https://arxiv.org/abs/2006.12356)
-- Image matching: [Sparse Neighbourhood Consensus Networks, ECCV'20](https://www.di.ens.fr/willow/research/sparse-ncnet/)
+[pypi-image]: https://badge.fury.io/py/MinkowskiEngine.svg
+[pypi-url]: https://pypi.org/project/MinkowskiEngine/
+[pypi-download]: https://img.shields.io/pypi/dm/MinkowskiEngine
+[slack-badge]: https://img.shields.io/badge/slack-join%20chats-brightgreen
+[slack-url]: https://join.slack.com/t/minkowskiengine/shared_invite/zt-piq2x02a-31dOPocLt6bRqOGY3U_9Sw
