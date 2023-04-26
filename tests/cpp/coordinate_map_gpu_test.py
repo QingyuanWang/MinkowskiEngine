@@ -5,7 +5,7 @@ import time
 import torch
 import MinkowskiEngineTest._C
 
-from utils import load_file, batched_coordinates
+from utils.utils import load_file, batched_coordinates
 
 
 class CoordinateMapTestCase(unittest.TestCase):
